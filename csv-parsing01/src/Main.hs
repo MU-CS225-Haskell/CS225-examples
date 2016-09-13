@@ -73,9 +73,9 @@ main = do
 --   UTILS   --
 ---------------
 
--- | Sorts the vector in place if it is safe to do so, otherwise it will sort a
---   copy of the vector. This is, overall, a safe operation. See the
---   vector-algorithm and vector docs for more info (search for them on Hackage)
+-- | See https://www.schoolofhaskell.com/user/commercial/content/vector#modify-and-the-st-monad
+--   for more information on what `modify` does. In particular, it is a safe
+--   function.
 sortImmutable :: Ord a => V.Vector a -> V.Vector a
 sortImmutable = V.modify sort
 

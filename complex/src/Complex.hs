@@ -22,9 +22,10 @@ instance RealFloat a => Num (Complex a) where
   negate (a :+ b) = negate a :+ negate b
   -- | Absolute value
   abs (a :+ b) = sqrt (a^2 + b^2) :+ 0
-  -- | Signum
+  -- | Signum (the 'sign' of a complex number is best described as the unit
+  --   vector in the direction its facing)
   signum   (0 :+ 0) = 0 :+ 0
-  signum z@(a :+ b) = a/r :+ b/r where r = re (abs z)
+  signum z@(a :+ b) = a/r :+ b/r where r = magnitude z
   -- | Conversion from integers
   fromInteger n = fromInteger n :+ 0
 
@@ -36,6 +37,6 @@ conjugate (a :+ b) = a :+ (-b)
 
 -- | Fractional instances
 instance (RealFloat a) => Fractional (Complex a) where
-  (a :+ b) / z@(c :+ d) = (a*c + b*d)/k :+ (b*c - a*d)/k
-                            where k = (magnitude z)^2
+  (a :+ b) / (c :+ d) = (a*c + b*d)/k :+ (b*c - a*d)/k
+                          where k = c^2 + d^2
   fromRational a = fromRational a :+ 0
