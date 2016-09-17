@@ -1,3 +1,8 @@
+----------------------------------- NOTE -----------------------------------
+-- This example is deliberately contrived! You will, in practice, never, *ever*
+-- do anything like this.
+
+
 import Data.Function (on)
 
 main :: IO ()
@@ -38,9 +43,12 @@ horribleButSafeFoo xs =
   case safeMaximum xs of
     Nothing -> Nothing
     Just x  ->
-      case safeSqrt ((x*17) // 3) of
+      case divideBy 3 (x*17) of
         Nothing -> Nothing
-        Just x' -> safeSqrt x'
+        Just x' ->
+          case safeSqrt x' of
+            Nothing  -> Nothing
+            Just x'' -> safeSqrt x''
 
 infixl 1 |>
 -- | We'll use this to safely and succinctly combine our functions that return
