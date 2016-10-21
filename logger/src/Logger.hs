@@ -7,6 +7,7 @@ module Logger
   , logWithValue
   ) where
 
+import Control.Monad (liftM, ap)
 import Data.Foldable (toList)
 import Data.Monoid ((<>))
 import Data.Sequence (Seq, empty, singleton)
@@ -25,15 +26,22 @@ import Data.Sequence (Seq, empty, singleton)
 --   concatenation, where n1 and n2 are the lengths of the sequences.
 newtype Logger a = Logger { runLogger :: (a, Seq String) }
 
+-- | Since we know what our Monad instance should be, we can define Functor in
+--   terms of it.
 instance Functor Logger where
-  fmap f (Logger (x, l)) = Logger (f x, l)
+  fmap = liftM
 
+-- | We can do the same with Applicative
 instance Applicative Logger where
-  pure a = Logger (a, mempty)
-  Logger (f, l) <*> Logger (x, l') = Logger (f x, l <> l')
+  pure  = return
+  (<*>) = ap
 
 instance Monad Logger where
-  Logger (v, l) >>= f = Logger (id, l) <*> f v
+  return x = Logger (x, mempty)
+  l >>= f =
+    let (v,  l1) = runLogger l
+        (v', l2) = runLogger (f v)
+    in  Logger (v', l1 <> l2)
 
 instance Show a => Show (Logger a) where
   show = ppLog

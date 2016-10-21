@@ -68,6 +68,6 @@ lift = (Just .)
 safeFoo :: (Real a, Floating b, Foldable t) => t a -> Maybe b
 safeFoo xs = safeMaximum xs
           |> lift (*17)
-          |> lift (// 3)
+          |> divideBy 3
           |> safeSqrt
           |> safeSqrt
